@@ -3,6 +3,7 @@ package com.example.MVC.controller;
 import com.example.MVC.dto.BookPojo;
 import com.example.MVC.service.Bookservice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,7 @@ public class BookController {
 
 
     @GetMapping("/edit/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String showUpdateForm(@PathVariable Integer id, Model model) {
         model.addAttribute("book",bookService.getById(id));
         return "update-book";
@@ -57,10 +59,17 @@ public class BookController {
     }
 
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String deleteBook(@PathVariable Integer id,Model model){
         bookService.delete(id);
         return RETURN_URL;
     }
+
+    @GetMapping("/403")
+    public String getAccessDeniedPage(){
+        return "403";
+    }
+
 
 
 
